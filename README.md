@@ -13,6 +13,7 @@
 4. model: the folder for model files
 
 ## How to prepare the dataset
+The  export data with files is in /home/omnious/workspace/yeskendir/KERN/Influencer_Export_autotagged on server 92.
 ### To prepare distance map of fashion elements
 Run
 ```python
@@ -23,13 +24,12 @@ Run
 ```python
 python prepare_data_from_export_files.py --save_data_file new_data.json --save_data_norm_file new_data_norm.json
 ```
+Prepared files will be saved in /dataset/omnious/
 
 ## How to run training
-1. Download the dataset to "dataset/omnious/" folder
+1. Change the hyper-parameters in the configure file config.yaml.
 
-2. Change the hyper-parameters in the configure file config.yaml.
-
-3. Run: train.py
+2. Run: train.py
 
 ## Error analysis
 ### To evaluate the model per influencer group:
