@@ -9,17 +9,36 @@
 
 1. The entry script is: train.py
 2. The config file is: config.yaml
-3. utility.py: the script for dataloader
+3. utility_omnious.py: the script for omnious dataloader
 4. model: the folder for model files
 
+## How to prepare the dataset
+
 ## How to Run
-1. Download the [dataset](https://drive.google.com/open?id=1OtwOoHYMuLKy_Yjk-_rgjJL5uMWWhPn8), decompress it and put it on the top directory: tar -zxvf dataset.tgz
-Note that, the downloaded files include both proprecessed datasets of GeoStyle and FIT. If you want to download the original GeoStyle dataset and reproduce the preprocessing, kindly run the script 0\_preprocess\_data.py. Detailed introduction is within the script.
+1. Download the dataset to "dataset/omnious/" folder
 
 2. Change the hyper-parameters in the configure file config.yaml.
 
 3. Run: train.py
 
+## Error analysis
+### To evaluate the model per influencer group:
+Run 
+```python
+python evaluate_per_group.py --device 1 --dataset omnious --weights /path/to/model.pt --save_filename_tsv file_to_save_results.tsv
+```
+### To evaluate the model per fashion element:
+Run
+```python
+python evaluate_per_element.py --device 1 --dataset omnious --weights /path/to/model.pt --save_filename_tsv file_to_save_results.tsv
+```
+
+## How to run inference
+Run 
+```python
+ python inference_trend.py --weights /path/to/model.pt --group_name  'location:All__segment:Nano__target_age:All' --fashion_element 'color:Black' --upload_date "2020-09-13 02:22:28" --save_infernece_trend True
+```
+If save_inference_trend is Ture, the plot will be saved in /inference_plots
 
 ### Acknowledgement
 This project is supported by the National Research Foundation, Prime Minister's Office, Singapore under its IRC@Singapore Funding Initiative.
