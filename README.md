@@ -13,8 +13,18 @@
 4. model: the folder for model files
 
 ## How to prepare the dataset
+### To prepare distance map of fashion elements
+Run
+```python
+python prepare_distance_mat.py  --save_data_file new_fashion_data.json --save_data_norm_file new_fashion_data_norm.json
+```
+### To prepare data from export files
+Run
+```python
+python prepare_data_from_export_files.py --save_data_file new_data.json --save_data_norm_file new_data_norm.json
+```
 
-## How to Run
+## How to run training
 1. Download the dataset to "dataset/omnious/" folder
 
 2. Change the hyper-parameters in the configure file config.yaml.
