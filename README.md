@@ -54,3 +54,5 @@ If save_inference_trend is Ture, the plot will be saved in /inference_plots
 This project is supported by the National Research Foundation, Prime Minister's Office, Singapore under its IRC@Singapore Funding Initiative.
 
 <img src="https://github.com/mysbupt/KERN/blob/master/next.png" width = "297" height = "100" alt="next" align=center />
+
+### Test
