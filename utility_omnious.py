@@ -60,6 +60,7 @@ class TrendDataset(Dataset):
 
         neibors = self.neibors_mat[ele_id].tolist()
         # original sample methods, which is not effective
+        
         """
         close_neibors = random.sample(neibors[0:self.thresh].tolist(), 2)
         far_neibors = random.sample(neibors[-self.thresh:].tolist(), 2)
