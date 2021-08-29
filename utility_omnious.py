@@ -71,6 +71,7 @@ class TrendDataset(Dataset):
         end_point = start_point + self.conf["sample_range"]
         sample_neibors_ele_ids = random.sample(neibors[start_point:end_point], 3)
         sample_neibors = [random.sample(self.ele_id_to_idx[x], 1)[0] for x in sample_neibors_ele_ids]
+        
         filtered_neibors = []
         filtered_neibors_eles = []
         for x_i,x in enumerate(sample_neibors):
@@ -147,18 +148,38 @@ class TrendData(Dataset):
                                          test_target_age)
         self.test_loader = DataLoader(self.test_set, batch_size=conf["batch_size"], shuffle=False, num_workers=10)
 
+    def create_id_map(self):
 
+        if "location" in self.conf['drop_attr']:
+            location_id_map, location_id_g = {"null":0}, 1
+        else:
+            location_id_map, location_id_g = {}, 0
+
+        if "segment" in self.conf['drop_attr']:
+            segment_id_map, segment_id_g = {"null":0}, 1
+        else:
+            segment_id_map, segment_id_g = {}, 0
+        
+        if "target_age" in self.conf['drop_attr']:
+            target_age_id_map, target_age_id_g =  {"null":0}, 1
+        else:
+            target_age_id_map, target_age_id_g = {}, 0
+        
+        return [location_id_map, segment_id_map, target_age_id_map], [location_id_g, segment_id_g, target_age_id_g]
 
     def get_ori_data(self):
         print(" get_ori_data ")
         all_data = json.load(open(self.conf["data_path"]))
         all_data_norm = json.load(open(self.conf["data_norm_path"]))
 
-        location_id_map, segment_id_map, target_age_id_map = {}, {}, {"null": 0}
+        id_map, id_g = self.create_id_map()
+
+        location_id_map, segment_id_map, target_age_id_map = id_map
         trends, grp_ids, ele_ids, trend_norm, location_ids, segment_ids, target_age_ids = [], [], [], [], [], [], []
         grp_ele_id, idx = {}, 0
         time_num = 0
-        location_id_g, segment_id_g, target_age_id_g = 0, 0, 1
+        location_id_g, segment_id_g, target_age_id_g = id_g
+        
         grp_id_map, ele_id_map = {}, {}
         for group_name, res in all_data.items():
             if group_name not in grp_id_map:
@@ -264,13 +285,16 @@ class TrendData(Dataset):
         sequences = [[] for _ in range(len(ele_id_map.keys()))]
         fashion_data = json.load(open(fashion_data_path))
         for fashion, seq in fashion_data.items():
-            id_ = ele_id_map[fashion]
-            sequences[id_] = np.array([x[1] for x in seq])
+            try:
+                id_ = ele_id_map[fashion]
+                sequences[id_] = np.array([x[1] for x in seq])
+            except:
+                continue
         sequences = np.array(sequences)
 
         n_len = sequences.shape[0]
         dist_mat = []
-        for a_id, a in tqdm(enumerate(sequences)):
+        for a_id, a in tqdm(enumerate(sequences), desc='generate distance matrix'):
             a_broad = np.repeat(a[np.newaxis, :], n_len, axis=0)  # [n_len, seq_len]
             mape = np.mean(np.abs(a_broad - sequences) / sequences, axis=-1) * 100  # [n_len]
             dist_mat.append(mape)
